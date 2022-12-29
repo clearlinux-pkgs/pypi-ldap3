@@ -4,7 +4,7 @@
 #
 Name     : pypi-ldap3
 Version  : 2.9.1
-Release  : 10
+Release  : 11
 URL      : https://files.pythonhosted.org/packages/43/ac/96bd5464e3edbc61595d0d69989f5d9969ae411866427b2500a8e5b812c0/ldap3-2.9.1.tar.gz
 Source0  : https://files.pythonhosted.org/packages/43/ac/96bd5464e3edbc61595d0d69989f5d9969ae411866427b2500a8e5b812c0/ldap3-2.9.1.tar.gz
 Summary  : A strictly RFC 4510 conforming LDAP V3 pure Python client library
@@ -15,6 +15,9 @@ Requires: pypi-ldap3-python = %{version}-%{release}
 Requires: pypi-ldap3-python3 = %{version}-%{release}
 BuildRequires : buildreq-distutils3
 BuildRequires : pypi(pyasn1)
+# Suppress stripping binaries
+%define __strip /bin/true
+%define debug_package %{nil}
 
 %description
 =====
@@ -59,15 +62,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1656395666
+export SOURCE_DATE_EPOCH=1672287580
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
-export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
-export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
 
@@ -84,8 +87,8 @@ popd
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/pypi-ldap3
-cp %{_builddir}/ldap3-2.9.1/COPYING.LESSER.txt %{buildroot}/usr/share/package-licenses/pypi-ldap3/93a34ec120cdc2f9216d2217ffb32908fd9e3d4b
-cp %{_builddir}/ldap3-2.9.1/COPYING.txt %{buildroot}/usr/share/package-licenses/pypi-ldap3/52be821be7d06dde87d7805331066d1af6f3f9f8
+cp %{_builddir}/ldap3-%{version}/COPYING.LESSER.txt %{buildroot}/usr/share/package-licenses/pypi-ldap3/93a34ec120cdc2f9216d2217ffb32908fd9e3d4b || :
+cp %{_builddir}/ldap3-%{version}/COPYING.txt %{buildroot}/usr/share/package-licenses/pypi-ldap3/52be821be7d06dde87d7805331066d1af6f3f9f8 || :
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
